@@ -16,38 +16,41 @@
  *
  */
 import React from 'react';
-import {
-  StyleSheet,
-  TextInput,
-  View
-} from 'react-native';
+import { StyleSheet, TextInput, View, Keyboard } from 'react-native';
 
 import AV from 'leancloud-storage';
 import DeviceInfo from 'react-native-device-info';
-import ReadingToolbar from '../components/ReadingToolbar';
-import { toastShort } from '../utils/ToastUtil';
-
-const toolbarActions = [
-  { title: '提交', iconName: 'md-checkmark', show: 'always' }
-];
+import Icon from 'react-native-vector-icons/Ionicons';
+import ToastUtil from '../../utils/ToastUtil';
 
 let feedbackText;
 
 class Feedback extends React.Component {
-  constructor(props) {
-    super(props);
-    this.onActionSelected = this.onActionSelected.bind(this);
-  }
-
+  static navigationOptions = ({ navigation }) => ({
+    title: '建议',
+    tabBarIcon: ({ tintColor }) =>
+      <Icon name="md-thumbs-up" size={25} color={tintColor} />,
+    headerRight: (
+      <Icon.Button
+        name="md-checkmark"
+        backgroundColor="transparent"
+        underlayColor="transparent"
+        activeOpacity={0.8}
+        onPress={() => {
+          navigation.state.params.handleCheck();
+        }}
+      />
+    )
+  });
   componentDidMount() {
     feedbackText = '';
+    this.props.navigation.setParams({ handleCheck: this.onActionSelected });
   }
 
-  onActionSelected() {
-    if (feedbackText === '') {
-      toastShort('请填写建议内容哦~');
+  onActionSelected = () => {
+    if (feedbackText === undefined || feedbackText.replace(/\s+/g, '') === '') {
+      ToastUtil.showShort('请填写建议内容哦~');
     } else {
-      const { navigator } = this.props;
       const feedback = AV.Object.new('Feedback');
       feedback.set('manufacturer', DeviceInfo.getManufacturer());
       feedback.set('system', DeviceInfo.getSystemName());
@@ -56,23 +59,20 @@ class Feedback extends React.Component {
       feedback.set('appVersion', DeviceInfo.getVersion());
       feedback.set('feedback', feedbackText);
       feedback.save();
-      navigator.pop();
-      toastShort('您的问题已反馈，我们会及时跟进处理');
+      ToastUtil.showShort('您的问题已反馈，我们会及时跟进处理');
+      this.textInput.clear();
+      Keyboard.dismiss();
     }
-  }
+  };
 
   render() {
-    const { navigator } = this.props;
     return (
       <View style={styles.container}>
-        <ReadingToolbar
-          title="建议"
-          actions={toolbarActions}
-          onActionSelected={this.onActionSelected}
-          navigator={navigator}
-        />
         <TextInput
-          style={{ flex: 1, fontSize: 18, padding: 15, textAlignVertical: 'top' }}
+          ref={(ref) => {
+            this.textInput = ref;
+          }}
+          style={styles.textInput}
           placeholder="请写下您宝贵的意见或建议，与iReading一起进步！"
           placeholderTextColor="#aaaaaa"
           underlineColorAndroid="transparent"
@@ -92,7 +92,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: '#fcfcfc'
+    backgroundColor: '#fff'
+  },
+  textInput: {
+    flex: 1,
+    fontSize: 18,
+    padding: 15,
+    textAlignVertical: 'top'
   }
 });
 

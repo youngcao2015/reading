@@ -15,15 +15,11 @@
  * limitations under the License.
  *
  */
-import React from 'react';
-import { Text } from 'react-native';
-import { shallow } from 'enzyme';
-import { expect } from 'chai';
-import Button from '../Button';
+import { fork } from 'redux-saga/effects';
 
-describe('<Button />', () => {
-  it('it should render 1 Text component', () => {
-    const wrapper = shallow(<Button />);
-    expect(wrapper.find(Text)).to.have.length(1);
-  });
-});
+import { watchRequestTypeList } from './category';
+import { watchRequestArticleList } from './read';
+
+export default function* rootSaga() {
+  yield [fork(watchRequestTypeList), fork(watchRequestArticleList)];
+}

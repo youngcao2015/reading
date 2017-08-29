@@ -2,16 +2,12 @@
     package="com.reading">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_LOGS" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
@@ -23,12 +19,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <!-- 微信Activity -->
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:exported="true"
             android:label="@string/app_name" />
+
         <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+
+        <!--react-native异常捕捉-->
+        <receiver android:name=".ReactNativeJSCrashReceiver">
+            <intent-filter>
+                <action android:name="com.richardcao.android.REACT_NATIVE_CRASH_REPORT_ACTION" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

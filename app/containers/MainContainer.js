@@ -18,10 +18,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import CodePush from 'react-native-code-push';
-import Main from '../pages/Main';
+import { bindActionCreators } from 'redux';
+import Icon from 'react-native-vector-icons/Ionicons';
+import Main from '../pages/MainPage/Main';
+import * as readCreators from '../actions/read';
 
 class MainContainer extends React.Component {
-  componentDidMount() {
+  static navigationOptions = {
+    title: '首页',
+    tabBarIcon: ({ tintColor }) =>
+      <Icon name="md-home" size={25} color={tintColor} />
+  };
+
+  static componentDidMount() {
     CodePush.sync({
       deploymentKey: 'RGOUfyINiLicZnld67aD0nrbRvyLV1Ifekvul',
       updateDialog: {
@@ -35,17 +44,22 @@ class MainContainer extends React.Component {
   }
 
   render() {
-    return (
-      <Main {...this.props} />
-    );
+    return <Main {...this.props} />;
   }
 }
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   const { read } = state;
   return {
     read
   };
-}
+};
 
-export default connect(mapStateToProps)(MainContainer);
+const mapDispatchToProps = (dispatch) => {
+  const readActions = bindActionCreators(readCreators, dispatch);
+  return {
+    readActions
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainContainer);

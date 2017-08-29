@@ -38,7 +38,9 @@ export default function read(state = initialState, action) {
         isRefreshing: false,
         isLoadMore: false,
         noMore: action.articleList.length === 0,
-        articleList: state.isLoadMore ? loadMore(state, action) : combine(state, action),
+        articleList: state.isLoadMore
+          ? loadMore(state, action)
+          : combine(state, action),
         loading: state.articleList[action.typeId] === undefined
       });
     default:
@@ -52,6 +54,24 @@ function combine(state, action) {
 }
 
 function loadMore(state, action) {
-  state.articleList[action.typeId] = state.articleList[action.typeId].concat(action.articleList);
+  state.articleList[action.typeId] = concatFilterDuplicate(
+    state.articleList[action.typeId],
+    action.articleList
+  );
   return state.articleList;
+}
+
+/**
+ * filter duplicate data when loading more.
+*/
+function concatFilterDuplicate(list1, list2) {
+  const set = new Set(list1.map(item => item.id));
+  const filterList2 = [];
+  const length = list2.length;
+  for (let i = 0; i < length; i++) {
+    if (!set.has(list2[i].id)) {
+      filterList2.push(list2[i]);
+    }
+  }
+  return list1.concat(filterList2);
 }

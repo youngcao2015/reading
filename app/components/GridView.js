@@ -16,18 +16,16 @@
  *
  */
 import React, { PropTypes } from 'react';
-import {
-  View,
-  StyleSheet,
-  ListView
-} from 'react-native';
+import { View, StyleSheet, ListView, ViewPropTypes } from 'react-native';
 
 const propTypes = {
   items: PropTypes.array,
   renderItem: PropTypes.func,
-  style: View.propTypes.style,
+  style: ViewPropTypes.style,
   itemsPerRow: PropTypes.number,
-  onEndReached: PropTypes.func
+  onEndReached: PropTypes.func,
+  scrollEnabled: PropTypes.func,
+  pageSize: PropTypes.number
 };
 
 const GridView = ({
@@ -82,7 +80,7 @@ const GridView = ({
       style={style}
       onEndReached={onEndReached}
       scrollEnabled={scrollEnabled}
-      pageSize={pageSize | 1}
+      pageSize={pageSize || 1}
       enableEmptySections
     />
   );

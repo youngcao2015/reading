@@ -50,6 +50,10 @@
 
 -dontwarn com.facebook.react.**
 
+# TextLayoutBuilder uses a non-public Android constructor within StaticLayout.
+# See libs/proxy/src/main/java/com/facebook/fbui/textlayoutbuilder/proxy for details.
+-dontwarn android.text.StaticLayout
+
 # okhttp
 
 -keepattributes Signature
@@ -65,15 +69,9 @@
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 -dontwarn okio.**
 
-# stetho
-
--dontwarn com.facebook.stetho.**
-
-# https://github.com/facebook/react-native/issues/6624#
--keep class com.facebook.react.bridge.queue.NativeRunnable { *; }
-
--keep class com.facebook.imagepipeline.gif.** { *; }
--keep class com.facebook.imagepipeline.webp.** { *; }
+-keep class com.facebook.imagepipeline.animated.factory.AnimatedFactoryImpl {
+  public AnimatedFactoryImpl(com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory, com.facebook.imagepipeline.core.ExecutorSupplier);
+}
 
 -keep class com.tencent.mm.sdk.** {
    *;
@@ -81,3 +79,5 @@
 
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
+
+-ignorewarnings

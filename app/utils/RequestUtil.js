@@ -15,15 +15,16 @@
  * limitations under the License.
  *
  */
-const HOST = 'http://apis.baidu.com/';
+
+import getUrl from './UrlUtil';
 
 export const request = (url, method, body) => {
   let isOk;
   return new Promise((resolve, reject) => {
-    fetch(HOST + url, {
+    fetch(getUrl(url), {
       method,
       headers: {
-        apikey: '19ffb04654b0f50d003e0a58abf2c50b'
+        'Content-Type': 'application/json;charset=utf-8'
       },
       body
     })
