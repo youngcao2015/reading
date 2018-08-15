@@ -18,5 +18,5 @@
 import { AppRegistry } from 'react-native';
 import Root from './app/root';
 
-// reading
+// reading update
 AppRegistry.registerComponent('reading', () => Root);
